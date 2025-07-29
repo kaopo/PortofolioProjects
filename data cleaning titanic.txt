@@ -1,0 +1,74 @@
+import pandas as pd
+import numpy as np
+from scipy import stats
+
+train_data = pd.read_csv("https://storage.googleapis.com/courses_data/Machine%20Learning%20Titanic/train.csv")
+test_data = pd.read_csv("https://storage.googleapis.com/courses_data/Machine%20Learning%20Titanic/test.csv")
+
+'''
+print(train_data.info())
+print(test_data.info())'''
+
+print(train_data.isna().sum())
+print(test_data.isna().sum())
+
+train_data = train_data.drop(columns=['Cabin'])
+test_data = test_data.drop(columns=['Cabin'])
+
+print(train_data.columns, "\n", test_data.columns)
+
+mean_age_by_sex = train_data.groupby('Sex')['Age'].mean()
+print(f"The mean values for each group are:\n{mean_age_by_sex}\n\n")
+
+train_data["Age"] = train_data["Age"].fillna(train_data["Sex"].map(mean_age_by_sex))
+train_data["Age"] = [int(x) for x in train_data["Age"]]
+
+test_data["Age"] = test_data["Age"].fillna(test_data["Sex"].map(mean_age_by_sex))
+test_data["Age"] = [int(x) for x in test_data["Age"]]
+
+"""
+For the `Embarked` column we only have 2 missing values. 
+Since this column is categorical, of course, we cannot compute a mean value.
+Instead we will fill the missing values with the value of the most popular port.
+"""
+
+most_popular_embarked = train_data["Embarked"].mode()[0]
+print(f"The port where the most passengers embarked was {most_popular_embarked}.")
+
+train_data["Embarked"] = train_data["Embarked"].fillna(most_popular_embarked)
+
+"""
+For the `Fare` column we only have 1 missing value and we could follow
+the same strategy of imputation.
+Be careful here the missing value exists on the test set, however, 
+we fill based on the train set mean 
+"""
+
+mean_fare = train_data["Fare"].mean()
+print(f"The mean fare based on the trainset was {mean_fare}")
+
+test_data["Fare"] = test_data["Fare"].fillna(mean_fare)
+
+print(train_data.info())
+print("\n")
+print(test_data.info())
+
+"""
+Presenting two ways to create dummy variables on your dataset.
+For `Embarked` and `Pclass` we use the powerful pandas get_dummies() function
+and
+for `Sex` we use a more naive, but still an option, approach of using mapping.
+
+Notice that on get_dummies() we also use drop_first=True, which actually drops the created column
+for one of our category since we can assume this state of information if the rest of column's are 0.
+"""
+# 1st way
+train_data = pd.get_dummies(train_data, columns=["Embarked", "Pclass"], drop_first=True)
+test_data = pd.get_dummies(test_data, columns=["Embarked", "Pclass"], drop_first=True)
+
+# 2nd way
+train_data["Sex"] = train_data["Sex"].map({'male': 0, 'female': 1})
+test_data["Sex"] = test_data["Sex"].map({'male': 0, 'female': 1})
+
+print(train_data.head())
+print(test_data.head())

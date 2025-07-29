@@ -1,0 +1,55 @@
+import matplotlib.pyplot as plt
+
+Goals_Scored = [23, 25, 21, 22, 19]
+
+Players =['Harry Kane', 'Mo Salah', 'Bruno Fernandes', 'Jamie Vardy', 'Son Heung-min']
+
+Games_Played = [34, 33, 34, 35, 33]
+
+Teams = ['Tottenham Hotspur', 'Liverpool', 'Manchester United', 'Leicester City', 'Tottenham Hotspur']
+
+Team_Points = [65, 74, 70, 64, 65]
+
+Assists = [8, 7, 11, 6, 10]
+
+plt.figure(figsize=(10,6))
+''' Line Plot
+plt.plot(Players, Goals_Scored, marker='o')
+
+
+plt.xlabel('Players')
+plt.ylabel('Goals')
+plt.title('Goals Scored per Player')
+
+plt.grid(True)
+
+plt.show()'''
+
+'''Scatter Plot
+plt.scatter(Games_Played, Goals_Scored, marker='^')
+
+plt.xlabel('Games Player')
+plt.ylabel('Goals Scored')
+plt.title('Goals per game player')
+
+plt.grid(True)
+
+plt.show()'''
+
+'''Bar Chart
+plt.bar(Teams, Team_Points,color=['blue', 'red'])
+
+plt.xlabel('Teams')
+plt.ylabel('Team Points')
+plt.title('Team points per team')
+plt.grid(axis='y')
+
+plt.show()'''
+
+plt.pie(Assists, labels=Players,autopct='%1.1f%%')
+
+
+plt.title('Assists per Player')
+
+
+plt.show()
